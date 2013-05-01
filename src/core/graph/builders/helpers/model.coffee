@@ -1,23 +1,11 @@
-mongoose = require "mongoose"
+mongoose = require("mongoose")
 Schema   = mongoose.Schema
 ObjectId = Schema.Types.ObjectId
-
+_MongooseAdapter = require("./_adapter")
 
 ###
 Specific plugins
 ###
-PLUGIN_DIR = "/Users/chris/Dropbox/Development/code/dojodatabase3/lib/plugins/schema"
-
-BasicPlugin        = require("#{PLUGIN_DIR}/basic")
-OwnablePlugin      = require("#{PLUGIN_DIR}/ownable")
-OwnerPlugin        = require("#{PLUGIN_DIR}/owner")
-ConnectablePlugin  = require("#{PLUGIN_DIR}/connectable")
-ActablePlugin      = require("#{PLUGIN_DIR}/actable")
-MessageablePlugin  = require("#{PLUGIN_DIR}/messageable")
-
-_MongooseAdapter = require "./_adapter"
-
-
 
 class ModelInitializer
 
@@ -26,16 +14,10 @@ class ModelInitializer
     Method: constructor
   ###
 
-  constructor: (relations, rawSchemas) ->
+  constructor: (relations, rawSchemas, plugins) ->
     @_relations = relations
     @_rawSchemas = rawSchemas
-    @_plugins =
-      Basic:        BasicPlugin
-      Ownable:      OwnablePlugin
-      Owner:        OwnerPlugin
-      Connectable:  ConnectablePlugin
-      Actable:      ActablePlugin
-      Messageable:  MessageablePlugin
+    @_plugins = plugins
     @_models = {}
 
   ###
@@ -173,7 +155,7 @@ class ModelInitializer
     schemas = {}
     #create schemas
     for name, d of @_rawSchemas
-      s = new Schema d.fields
+      s = new Schema d.fields, {collection: utils.pluralize(name.toLowerCase())}
       #add indices
       @_addIndices s, d
       schemas[name] = s

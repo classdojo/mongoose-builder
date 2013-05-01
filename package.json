@@ -17,8 +17,7 @@
         "lib": "."
     },
     "dependencies": { 
-        "dojoconstants": "",
-        "mongoose": "3.5.0",
+        "mongoose": "3.6.8",
         "coffee-script": "1.4.0",
         "underscore": "1.4.2"
     },
@@ -27,6 +26,6 @@
         "expect.js": "0.2.0"
     },
     "engines": {
-        "node": ">=0.6.0"
+        "node": ">=0.6.19"
     }
 }

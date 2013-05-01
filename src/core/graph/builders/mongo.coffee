@@ -8,7 +8,6 @@
 # BaseBuilder = require("./base")
 ModelInitializer = require("./helpers/model")
 MongoInitializer = require("./helpers/mongo")
-Relational       = require("./helpers/relational")
 
 ###
   Class: MongooseBuilder
@@ -34,7 +33,7 @@ class MongooseBuilder
   preBuild: (callback) =>
 
     #Mongo initializer doesn't need dbSettings until initializing models
-    @_modelInitializer = new ModelInitializer @_relations, @_rawSchemas
+    @_modelInitializer = new ModelInitializer @_relations, @_rawSchemas, @_plugins
     @_mongoConn = new MongoInitializer @_dbSettings
     @_modelInitializer.prepSchemas (err) =>
       @_mongoConn.connect (err) =>
