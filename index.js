@@ -4,6 +4,7 @@
 
   //export utils to global namespace
   utils = require("./lib/utils");
+  _     = require("underscore");
 
   //let's also include a global collection -> schema mapper
 

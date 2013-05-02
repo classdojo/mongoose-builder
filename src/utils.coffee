@@ -60,6 +60,7 @@ uncountables = [
 ]
 
 utils.pluralize = (name) ->
+  name = name.toLowerCase()
   if !~uncountables.indexOf(name.toLowerCase())
     found = rules.filter (rule) ->
       return name.match(rule[0])

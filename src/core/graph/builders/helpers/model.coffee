@@ -27,7 +27,7 @@ class ModelInitializer
     schema format.
   ###
 
-  prepSchemas: (callback) =>
+  prepSchemas: (callback) ->
     @_expandTypedPaths()
     @_schemas = @_initSchemas()
     callback null  #signal no error for now
@@ -40,29 +40,32 @@ class ModelInitializer
     it with the appropriate plugin.
   ###
 
-  addSchemaPlugins: (callback) =>
+  addSchemaPlugins: (callback) ->
 
     #let's loop through @_relations instead of
     #@_schemas
+    #let's loop through @_schemas not relations
 
-    for resourceName, resourceDef of @_relations
-      if resourceDef.store.type isnt 'mongo'
-        console.log "Ignoring #{resourceName} because it's not store mongo"
-        continue
-      schemaName = resourceDef.store.modelName
-      schema = @_schemas[schemaName]
+    for schemaName, schema of @_schemas
       options =
         models: @_models
         schemas: @_schemas
-        sName: schemaName
-      plugin = @_plugins[resourceDef.type]
+        thisSchema: schemaName
+      collectionName = utils.pluralize(schemaName)
+      relationConfig = @_relations[collectionName]
+      if not relationConfig?
+        console.log "No relation entry for schema #{schemaName}"
+        console.log "Skipping..."
+        continue
+      # console.log "PP", @_plugins
+      # console.log relationConfig
+      plugin = @_plugins[relationConfig.type]
       if plugin?
-        console.log "Enriching schema #{schemaName}"
+        console.log "Enriching shchema #{schemaName}"
         _MongooseAdapter.adapt schema, options, plugin
       else
-        console.log "No plugin for #{resourceDef.type}"
+        console.log "No plugin registered for #{relationConfig.type}"
     callback null
-
 
   ###
     Method: createModels
@@ -79,7 +82,7 @@ class ModelInitializer
 
   ###
 
-  createModels: (connections, callback) =>
+  createModels: (connections, callback) ->
     for modelName, Schema of @_schemas
       if modelName is "AwardRecord"
         db = connections['awardrecords']
@@ -93,7 +96,7 @@ class ModelInitializer
 
     Returns model instances
   ###
-  get: () =>
+  get: () ->
     @_models
 
   @::__defineGetter__ 'schemas', () ->
@@ -115,7 +118,7 @@ class ModelInitializer
 
     field1.field2 = "val"
   ###
-  _expandTypedPaths: (rawSchemas) =>
+  _expandTypedPaths: (rawSchemas) ->
 
     _buildPath = (field, fieldVal, typedSchema) =>
       if _.isString fieldVal
@@ -151,7 +154,7 @@ class ModelInitializer
 
   ###
 
-  _initSchemas: () =>
+  _initSchemas: () ->
     schemas = {}
     #create schemas
     for name, d of @_rawSchemas
@@ -171,7 +174,7 @@ class ModelInitializer
     Adds indices to a schema. Called by _initSchemas
   ###
 
-  _addIndices: (schema, rawSchema) =>
+  _addIndices: (schema, rawSchema) ->
     if rawSchema.indices?
       for index in rawSchema.indices
         schema.index.apply(schema, index)
@@ -181,7 +184,7 @@ class ModelInitializer
 
     Adds embedded fields to schema. Callbed by _addEmbeddedFields
   ###
-  _addEmbeddedFields: (schemaName, schemaToAdd, allSchemas) =>
+  _addEmbeddedFields: (schemaName, schemaToAdd, allSchemas) ->
     rawSchema = @_rawSchemas[schemaName]
     if rawSchema.embed?
       for field, embeddedSchema of rawSchema.embed
@@ -193,7 +196,7 @@ class ModelInitializer
         obj[field] = sVal
         schemaToAdd.add obj
 
-  _lowercasePlural: (name) =>
+  _lowercasePlural: (name) ->
     name = name.toLowerCase() #fake implementation
     name = name + "s"
     return name
