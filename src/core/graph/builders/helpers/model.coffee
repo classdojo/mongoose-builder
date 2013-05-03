@@ -61,7 +61,7 @@ class ModelInitializer
       # console.log relationConfig
       plugin = @_plugins[relationConfig.type]
       if plugin?
-        console.log "Enriching shchema #{schemaName}"
+        console.log "Enriching schema #{schemaName}"
         _MongooseAdapter.adapt schema, options, plugin
       else
         console.log "No plugin registered for #{relationConfig.type}"

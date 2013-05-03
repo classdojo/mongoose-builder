@@ -9,6 +9,8 @@
 ModelInitializer = require("./helpers/model")
 MongoInitializer = require("./helpers/mongo")
 
+MongooseRelational  = require("./helpers/relational/mongoose_relational")
+
 ###
   Class: MongooseBuilder
 
@@ -30,7 +32,7 @@ class MongooseBuilder
     @_dbSettings = dbSettings
     @_plugins    = {}
 
-  preBuild: (callback) =>
+  preBuild: (callback) ->
 
     #Mongo initializer doesn't need dbSettings until initializing models
     @_modelInitializer = new ModelInitializer @_relations, @_rawSchemas, @_plugins
@@ -47,12 +49,16 @@ class MongooseBuilder
 
     Expects preBuild() was called prior to calling this method.
   ###
-  build: (callback) =>
+  build: (callback) ->
     @_modelInitializer.addSchemaPlugins (err) =>
       #need to do relational operations here.
       if @_relationalCallback?
         #pass control there
-        @_relationalCallback @_relations, @_modelInitializer.schemas, (err) =>
+        #let's initialize a Relational instance and pass to callbakc
+        relationBuilder = new MongooseRelational(@_modelInitializer.schemas)
+        @_relationalCallback relationBuilder, (err) =>
+
+        # @_relationalCallback @_relations, @_modelInitializer.schemas, (err) =>
           @_modelInitializer.createModels @_mongoConn.get(), (err) =>
             console.log "Created models"
             callback err
@@ -62,7 +68,7 @@ class MongooseBuilder
           console.log "Created models"
           callback err
 
-  postBuild: (callback) =>
+  postBuild: (callback) ->
     callback null
 
   ###
@@ -74,13 +80,18 @@ class MongooseBuilder
     Since this builder is mongo specific, then it should know what to pass back to the callback
     in order for the MongoRelational class to perform correctly.
   ###
-  onRelational: (callback) =>
+  onRelational: (callback) ->
     @_relationalCallback = callback
 
-  getResult: () =>
-    @_modelInitializer.get()
-
-  registerPlugin: (name, Plugin) =>
+  registerPlugin: (name, Plugin) ->
     @_plugins[name] = Plugin
+
+  ###
+    Method: getDrivers
+
+
+  ###
+  getDrivers: () ->
+    @_modelInitializer.get()
 
 module.exports = MongooseBuilder
