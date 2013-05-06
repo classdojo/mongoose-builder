@@ -55,7 +55,7 @@ class MongooseBuilder
       if @_relationalCallback?
         #pass control there
         #let's initialize a Relational instance and pass to callbakc
-        relationBuilder = new MongooseRelational(@_modelInitializer.schemas)
+        relationBuilder = new MongooseRelational(@_modelInitializer.schemas, @_modelInitializer.models)
         @_relationalCallback relationBuilder, (err) =>
 
         # @_relationalCallback @_relations, @_modelInitializer.schemas, (err) =>
@@ -92,6 +92,6 @@ class MongooseBuilder
 
   ###
   getDrivers: () ->
-    @_modelInitializer.get()
+    @_modelInitializer.models
 
 module.exports = MongooseBuilder

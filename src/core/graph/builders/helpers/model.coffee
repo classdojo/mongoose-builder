@@ -47,11 +47,12 @@ class ModelInitializer
     #let's loop through @_schemas not relations
 
     for schemaName, schema of @_schemas
+      collectionName = utils.pluralize(schemaName)
       options =
         models: @_models
         schemas: @_schemas
         thisSchema: schemaName
-      collectionName = utils.pluralize(schemaName)
+        thisCollection: collectionName
       relationConfig = @_relations[collectionName]
       if not relationConfig?
         console.log "No relation entry for schema #{schemaName}"
@@ -96,7 +97,7 @@ class ModelInitializer
 
     Returns model instances
   ###
-  get: () ->
+  @::__defineGetter__ 'models', () ->
     @_models
 
   @::__defineGetter__ 'schemas', () ->

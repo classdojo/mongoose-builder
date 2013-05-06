@@ -13,6 +13,12 @@ exports.adapt = (schema, options, plugin) ->
     for pluginMethodName, pluginMethodDefinition of plugin::
       if pluginMethodName is 'constructor'
         continue
+      #ADD ALL THE METHODS
       skema.methods[pluginMethodName] = pluginMethodDefinition
+
+    #Also give each schema their type. This method definition also out of
+    #place here. Let's find a better place to put it.
+    skema.methods.type = () ->
+      return options.thisCollection
 
   schema.plugin _plugin, options

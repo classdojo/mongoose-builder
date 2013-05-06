@@ -67,3 +67,12 @@ utils.pluralize = (name) ->
     if found[0]?
       return name.replace found[0][0], found[0][1]
   return name
+
+
+
+###
+  Verify model helpers
+###
+utils.objectContains = (key, object) ->
+  # _.has(key, object)
+  return object[key]?

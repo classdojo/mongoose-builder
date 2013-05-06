@@ -14,10 +14,22 @@ class MongoRelational
     Method: constructor
     
     Delegates build operations to build
-    specific _relation object
+    specific _relation object.
+
+    Schemas collection used to inject specific
+    instance methods into each model.
+
+    Also pass in a reference to the models object which
+    at this point is uninitialized. will soon be populated
+    with model objects that communicate directly to the mongo
+    database.
+
+    child_plugin requires a reference to models in order to carry
+    out Relational Proxy operations.
   ###
-  constructor: (schemas) ->
+  constructor: (schemas, models) ->
     @_schemas = schemas
+    @_models = models
     #construct empty NodeManager
 
   ###
@@ -36,13 +48,22 @@ class MongoRelational
     if type is "parent_child"
       parentName = sNames.parent
       childName  = sNames.child
-      console.log "pc #{parentName} - #{childName}"
       parent    = @_schemas[parentName]
       child = @_schemas[childName]
+
       options =
+        mongoose:
+          models: @_models
         child:
           name: childName
           schema: child
+          collection: utils.pluralize(childName)
+        parent:
+          name: parentName
+          collection: utils.pluralize(parentName)
+        permission:
+          schema: @_schemas['Permission']
+
       parent.plugin MongooseChild.plugin, options
       #add to node manager
     else if type is "orphan"
