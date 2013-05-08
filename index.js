@@ -10,7 +10,7 @@
   //let's also include a global collection -> schema mapper
 
   MongooseBuilder    = require("./lib/core/graph/builders/mongo");
-  MongooseRelational = require("./lib/core/graph/builders/helpers/relational/mongo_relational");
+  MongooseRelational = require("./lib/core/graph/initializers/relational/mongoose_relational");
   MongoosePermission = require("./lib/core/permission");
 
   exports.Builder    = MongooseBuilder;

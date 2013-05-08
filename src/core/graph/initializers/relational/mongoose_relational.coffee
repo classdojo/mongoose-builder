@@ -8,7 +8,7 @@
 #child mongoose plugin
 MongooseChild = require("#{__dirname}/child_plugin")
 
-class MongoRelational
+class MongooseRelational
 
   ###
     Method: constructor
@@ -30,7 +30,7 @@ class MongoRelational
   constructor: (schemas, models) ->
     @_schemas = schemas
     @_models = models
-    #construct empty NodeManager
+
 
   ###
     Method: addRelationship  (Synchronous)
@@ -41,13 +41,11 @@ class MongoRelational
       "orphan"
 
     Orphan types will add the model to the orphaned collections.
-
-
   ###
-  addRelationship: (type, sNames) =>
+  addRelationship: (type, sNames) ->
     if type is "parent_child"
-      parentName = sNames.parent
-      childName  = sNames.child
+      parentName = sNames.parent.name
+      childName  = sNames.child.name
       parent    = @_schemas[parentName]
       child = @_schemas[childName]
 
@@ -69,23 +67,6 @@ class MongoRelational
     else if type is "orphan"
       orphan = sNames.orphan
     else
-      console.log "Invalid type #{type}"
+      console.error "Invalid type #{type}"
 
-    # if type is "parent_child"
-    #   s1 = @_schemas['Teacher']
-    #   s2 = @_schemas['Classes']
-    #   options =
-    #     child:
-    #       name: schema2Name
-    #       schema: s2
-    #   s1.plugin MongooseChild.plugin, options
-    #   #enrich node1 through child plugin
-    #   #add parent permission fields to schema with appropriate indices
-    #   @_nodeManager.addChild(schema1Name, schema2Name)  #add to nodeManager
-    # else if type is "orphan"
-    #   @_nodeManager.addOrphan(node1)
-    # else
-    #   console.log "Ignoring relationship type #{type}"
-
-
-module.exports = MongoRelational
+module.exports = MongooseRelational

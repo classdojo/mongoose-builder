@@ -16,12 +16,10 @@ RelationProxy = require("#{__dirname}/relation_proxy")
 exports.plugin = (schema, options) ->
   models = options.mongoose.models
 
-  childName   = options.child.name
   childSchema = options.child.schema
-  childColl   = options.child.collection
+  childColl   = options.child.collectionName
   
-  parentName  = options.parent.name
-  parentColl  = options.parent.collection
+  parentColl  = options.parent.collectionName
 
   permissionSchema  = options.permission.schema
 

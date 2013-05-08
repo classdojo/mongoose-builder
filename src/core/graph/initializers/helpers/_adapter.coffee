@@ -19,6 +19,6 @@ exports.adapt = (schema, options, plugin) ->
     #Also give each schema their type. This method definition also out of
     #place here. Let's find a better place to put it.
     skema.methods.type = () ->
-      return options.thisCollection
+      return options.thisCollectionName
 
   schema.plugin _plugin, options
