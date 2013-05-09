@@ -164,13 +164,6 @@ class ModelInitializer
       s = new Schema n.schema.fields, {collection: utils.pluralize(n.name)}
       @_addIndices s, n.schema
       schemas[n.name] = s
-    # #create schemas
-    # for name, d of @_rawSchemas
-    #   s = new Schema d.fields, {collection: utils.pluralize(name.toLowerCase())}
-    #   #add indices
-    #   @_addIndices s, d
-    #   schemas[name] = s
-    #add embedded fields
     for schemaName, schema of schemas
       @_addEmbeddedFields schemaName, schema, schemas
     return schemas
@@ -232,28 +225,5 @@ class ModelInitializer
                   name: childNode.name
               mongooseRelational.addRelationship "parent_child", opts
       callback null
-
-    # for collection, relationDef of @relational
-    #   #if this owns any resources add those to self
-    #   if relationDef.owns?
-    #     parentSchema = @_rNames[collection]
-    #     children = relationDef.owns.split(",")
-    #     for child in children
-    #       childSchema = @_rNames[child]
-    #       s =
-    #         parent: parentSchema
-    #         child:  childSchema
-    #       relationBuilder.addRelationship "parent_child", s
-    #       # @_nodeManager.addChild collection, child
-    #   else if not relationDef.ownedBy?
-    #     s =
-    #       orphan: @_rNames[collection]
-    #     relationBuilder.addRelationship "orphan", s
-    #     # @_nodeManager.addOrphan collection
-    #   else
-    #     #nop
-    # callback null
-
-
 
 module.exports = ModelInitializer
