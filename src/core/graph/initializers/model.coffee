@@ -60,6 +60,7 @@ class ModelInitializer
       options =
         thisSchemaName: n.name
         thisCollectionName: utils.pluralize(n.name)
+        models: @_models
       plugin = @_plugins[n.type]
       if plugin?
         console.log "Enriching schema #{n.name} - #{n.type}"
