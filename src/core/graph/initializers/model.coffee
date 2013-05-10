@@ -61,6 +61,7 @@ class ModelInitializer
         thisSchemaName: n.name
         thisCollectionName: utils.pluralize(n.name)
         models: @_models
+        short_name: n.short_name
       plugin = @_plugins[n.type]
       if plugin?
         console.log "Enriching schema #{n.name} - #{n.type}"
@@ -161,7 +162,7 @@ class ModelInitializer
   _initSchemas: () ->
     schemas = {}
     @_nodeBuilder.each (n) =>
-      s = new Schema n.schema.fields, {collection: utils.pluralize(n.name)}
+      s = new Schema n.schema.fields, {collection: utils.pluralize(n.name)} 
       @_addIndices s, n.schema
       schemas[n.name] = s
     for schemaName, schema of schemas

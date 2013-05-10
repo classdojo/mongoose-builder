@@ -30,6 +30,12 @@ exports.adapt = (schema, options, plugin) ->
     skema.virtual('_type_').get () ->
       return options.thisCollectionName
 
+    skema.statics._type_ = () ->
+      return options.thisCollectionName
+    if options.short_name?
+      skema.virtual('_short_name_').get () ->
+        return options.short_name
+
     skema.virtual('_models_').get () ->
       return options.models
 
