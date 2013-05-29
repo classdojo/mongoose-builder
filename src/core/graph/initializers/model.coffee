@@ -37,6 +37,7 @@ class ModelInitializer
   init: (callback) ->
     @_nodeBuilder.each (node) =>
       @_rawSchemas[node.name] = node.schema
+      node.setAlternateName node.name
       @_schemaTypes[utils.pluralize(node.name)] = node.type
 
     @_expandTypedPaths()
