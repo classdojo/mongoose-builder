@@ -17,4 +17,8 @@
   exports.Relational = MongooseRelational;
   exports.Permission = MongoosePermission;
 
+  //register ObjectID globally...
+  global.ObjectID = require("mongoose").Schema.Types.ObjectId
+
+
 })(exports);
