@@ -1,21 +1,39 @@
 class Permission
 
-  R     = 0
-  RW    = 1
-  RWD   = 2
-  SUPER = 3
+  ###
+    Permission Levels
+  ###
+  @R      = 0
+  @RW     = 1
+  @RWD    = 2
+  @SUPER  = 3
 
+  ###
+    Method: constructor
 
+    @param - ownerResource <Object> - A mongoose
+             model instance that implements the
+             owner interface.
+    @param - pLevel - A valid permission level.
 
+                Permission.R
+                Permission.RW
+                Permission.RWD
+                Permission.SUPER
+
+  ###
   constructor: (ownerResource, pLevel) ->
     @_owner = ownerResource
-    @_pLevel = pLevel
+    @_pLevel = pLevel     
 
   ###
     Method: serialize
 
     Creates a permission object consistent
     with the applications permission schema.
+
+    TODO(chris): allow client to specify what
+    serialize returns.
   ###
   serialize: () ->
     p =
