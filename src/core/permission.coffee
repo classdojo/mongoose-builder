@@ -24,7 +24,7 @@ class Permission
   ###
   constructor: (ownerResource, pLevel) ->
     @_owner = ownerResource
-    @_pLevel = pLevel     
+    @_pLevel = pLevel
 
   ###
     Method: serialize

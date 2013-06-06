@@ -55,13 +55,12 @@ class MongooseRelational
         child:
           name: childName
           schema: child
-          collection: utils.pluralize(childName)
+          collectionName: utils.pluralize(childName)
         parent:
           name: parentName
-          collection: utils.pluralize(parentName)
+          collectionName: utils.pluralize(parentName)
         permission:
           schema: @_schemas['Permission']
-
       parent.plugin MongooseChild.plugin, options
       #add to node manager
     else if type is "orphan"
