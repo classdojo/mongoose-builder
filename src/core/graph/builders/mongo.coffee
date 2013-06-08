@@ -23,7 +23,8 @@ class MongooseBuilder
   ###
   #Need relation, schema, and db settings.  Objects not
   # filepaths
-  constructor: (nodeBuilder, dbSettings) ->
+  constructor: (nodeBuilder, nodeManager, dbSettings) ->
+    @_nodeManager = nodeManager
     @_nodeBuilder = nodeBuilder
     @_dbSettings  = dbSettings
     @_plugins     = {}
@@ -31,7 +32,7 @@ class MongooseBuilder
   preBuild: (callback) ->
 
     #Mongo initializer doesn't need dbSettings until initializing models
-    @_modelInitializer = new ModelInitializer @_nodeBuilder, @_plugins
+    @_modelInitializer = new ModelInitializer @_nodeBuilder, @_nodeManager, @_plugins
     @_mongoConn = new MongoInitializer @_dbSettings
     @_modelInitializer.init (err) =>
       @_modelInitializer.addSchemaPlugins (err) =>
