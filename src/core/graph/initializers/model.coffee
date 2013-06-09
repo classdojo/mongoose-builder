@@ -16,7 +16,8 @@ class ModelInitializer
     Method: constructor
   ###
 
-  constructor: (nodeBuilder, plugins) ->
+  constructor: (nodeBuilder, nodeManager, plugins) ->
+    @_nodeManager = nodeManager
     @_nodeBuilder = nodeBuilder
     @_plugins     = plugins
     @_models      = {}
@@ -62,6 +63,7 @@ class ModelInitializer
         thisSchemaName: n.name
         thisCollectionName: utils.pluralize(n.name)
         models: @_models
+        nodeManager: @_nodeManager
         short_name: n.short_name
       plugin = @_plugins[n.type]
       if plugin?
