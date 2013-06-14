@@ -7,20 +7,10 @@
   utils = require("./lib/utils");
   _     = require("underscore");
 
-  modules = require("./lib/bootstrap");
-
-  exports.Builder = modules["MongooseBuilder"];
-  exports.Relational = modules["MongooseRelational"];
-  exports.Permission = modules["MongoosePermission"];
+  exports.Builder    = require("./lib/core/builder").plugin();
+  exports.Relational = require("./lib/core/initializers.relational").plugin(); //modules["MongooseRelational"];
+  exports.Permission = require("./lib/core/permission").plugin();//modules["MongoosePermission"];
   // //let's also include a global collection -> schema mapper
-
-  // MongooseBuilder    = require("./lib/core/builder");
-  // MongooseRelational = require("./lib/core/initializers.relational");
-  // MongoosePermission = require("./lib/core/permission");
-
-  // exports.Builder    = MongooseBuilder;
-  // exports.Relational = MongooseRelational;
-  // exports.Permission = MongoosePermission;
 
   //register ObjectID globally...
   global.ObjectID = require("mongoose").Schema.Types.ObjectId

@@ -1,4 +1,4 @@
-exports.plugin () ->
+exports.plugin = () ->
   ###
   This is class abstracts away mongoose connections
   ###
@@ -64,4 +64,4 @@ exports.plugin () ->
         connStrings.push(s)
       return connStrings.join(",")
 
-  module.exports = Connections
+  Connections

@@ -7,8 +7,8 @@ exports.plugin = () ->
   ###
 
   # BaseBuilder = require("./base")
-  ModelInitializer = require("#{__dirname}/../initializers/model")
-  MongoInitializer = require("#{__dirname}/../initializers/mongo")
+  ModelInitializer = require("#{__dirname}/../initializers.model/model")
+  MongoInitializer = require("#{__dirname}/../initializers.database").plugin()
 
   ###
     Class: MongooseBuilder
