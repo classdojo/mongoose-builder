@@ -5,7 +5,6 @@
 
 
 exports.adapt = (schema, options, plugin) ->
-
   #expands a plugins methods and adds to mongoose
   #schema object
   _plugin = (skema, options) ->
