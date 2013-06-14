@@ -2,8 +2,7 @@ mongoose = require("mongoose")
 Schema   = mongoose.Schema
 ObjectId = Schema.Types.ObjectId
 
-_MongooseAdapter    = require("./helpers/_adapter")
-MongooseRelational  = require("./relational/mongoose_relational")
+_MongooseAdapter    = require("#{__dirname}/adapter")
 
 ###
 Specific plugins
@@ -11,12 +10,18 @@ Specific plugins
 
 class ModelInitializer
 
+  @use: (name, pkg) ->
+    @__pkgs = @__pkgs || {}
+    @__pkgs[name] = pkg
+
+  @getPkg: (name) ->
+    return @__pkgs[name]
 
   ###
     Method: constructor
   ###
 
-  constructor: (nodeBuilder, nodeManager, plugins) ->
+  constructor: (MongooseRelational, nodeBuilder, nodeManager, plugins) ->
     @_nodeManager = nodeManager
     @_nodeBuilder = nodeBuilder
     @_plugins     = plugins
@@ -206,7 +211,8 @@ class ModelInitializer
           schemaToAdd.add obj
 
   _addRelationshipHooks: (callback) ->
-    mongooseRelational = new MongooseRelational(@_schemas, @_models)
+    MongooseRelational = ModelInitializer.getPkg "Relational"
+    mongooseRelational = new @__MongooseRelational(@_schemas, @_models)
     permissionNode = @_nodeBuilder.find('Permission')
     if not permissionNode?
       callback new Error("Permission node seems to be missing. Please ensure that you've defined a Permission schema")
