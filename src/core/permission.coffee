@@ -1,63 +1,65 @@
-class Permission
+exports.plugin = () ->
 
-  ###
-    Permission Levels
-  ###
-  @R      = 0
-  @RW     = 1
-  @RWD    = 2
-  @SUPER  = 3
+  class Permission
 
-  ###
-    Method: constructor
+    ###
+      Permission Levels
+    ###
+    @R      = 0
+    @RW     = 1
+    @RWD    = 2
+    @SUPER  = 3
 
-    @param - ownerResource <Object> - A mongoose
-             model instance that implements the
-             owner interface.
-    @param - pLevel - A valid permission level.
+    ###
+      Method: constructor
 
-                Permission.R
-                Permission.RW
-                Permission.RWD
-                Permission.SUPER
+      @param - ownerResource <Object> - A mongoose
+               model instance that implements the
+               owner interface.
+      @param - pLevel - A valid permission level.
 
-  ###
-  constructor: (ownerResource, pLevel) ->
-    @_owner = ownerResource
-    @_pLevel = pLevel
+                  Permission.R
+                  Permission.RW
+                  Permission.RWD
+                  Permission.SUPER
 
-  ###
-    Method: serialize
+    ###
+    constructor: (ownerResource, pLevel) ->
+      @_owner = ownerResource
+      @_pLevel = pLevel
 
-    Creates a permission object consistent
-    with the applications permission schema.
+    ###
+      Method: serialize
 
-    TODO(chris): allow client to specify what
-    serialize returns.
-  ###
-  serialize: () ->
-    p =
-      _id: @_owner.id
-      l: @_pLevel
-    return p
+      Creates a permission object consistent
+      with the applications permission schema.
 
-  ###
-    Equality methods
-  ###
+      TODO(chris): allow client to specify what
+      serialize returns.
+    ###
+    serialize: () ->
+      p =
+        _id: @_owner.id
+        l: @_pLevel
+      return p
 
-  gt: (pObj) ->
-    @_pLevel > pObj.l
+    ###
+      Equality methods
+    ###
 
-  gte: (pObj) ->
-    @_pLevel >= pObj.l
+    gt: (pObj) ->
+      @_pLevel > pObj.l
 
-  lt: (pObj) ->
-    @_pLevel < pObj.l
+    gte: (pObj) ->
+      @_pLevel >= pObj.l
 
-  lte: (pObj) ->
-    @_pLevel <= pObj.l
+    lt: (pObj) ->
+      @_pLevel < pObj.l
 
-  @::__defineGetter__ 'level', () ->
-    @_pLevel
+    lte: (pObj) ->
+      @_pLevel <= pObj.l
 
-module.exports = Permission
+    @::__defineGetter__ 'level', () ->
+      @_pLevel
+
+  Permission

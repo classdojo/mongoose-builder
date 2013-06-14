@@ -2,15 +2,13 @@ mongoose = require("mongoose")
 Schema   = mongoose.Schema
 ObjectId = Schema.Types.ObjectId
 
-_MongooseAdapter    = require("./helpers/_adapter")
-MongooseRelational  = require("./relational/mongoose_relational")
-
+_MongooseAdapter    = require("#{__dirname}/adapter")
+MongooseRelational  = require("#{__dirname}/../initializers.relational").plugin()
 ###
 Specific plugins
 ###
 
 class ModelInitializer
-
 
   ###
     Method: constructor
