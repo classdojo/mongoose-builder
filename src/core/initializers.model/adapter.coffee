@@ -15,7 +15,10 @@ exports.adapt = (schema, options, plugin) ->
         continue
       #ADD ALL THE METHODS. Give priority to schema instance method definitions.
       skema.methods[pluginMethodName] = configuration.methods.instance[pluginMethodName] || pluginMethodDefinition
-
+    #add any other instance methods that don't override default plugin methods
+    for instanceMethodName, instanceMethodDefinition of configuration.methods.instance
+      if not skema.methods[instanceMethodName]?
+        skema.methods[instanceMethodName] = instanceMethodDefinition
 
 
     ###
