@@ -5,17 +5,20 @@
 
 
 exports.adapt = (schema, options, plugin) ->
-
   #expands a plugins methods and adds to mongoose
   #schema object
   _plugin = (skema, options) ->
-    # console.log "A Plugin", plugin::
+    #get configuration
+    configuration = options.nodeManager.find(options.thisCollectionName).configuration
     for pluginMethodName, pluginMethodDefinition of plugin::
       if pluginMethodName is 'constructor'
         continue
-      #ADD ALL THE METHODS
-      skema.methods[pluginMethodName] = pluginMethodDefinition
-
+      #ADD ALL THE METHODS. Give priority to schema instance method definitions.
+      skema.methods[pluginMethodName] = configuration.methods.instance[pluginMethodName] || pluginMethodDefinition
+    #add any other instance methods that don't override default plugin methods
+    for instanceMethodName, instanceMethodDefinition of configuration.methods.instance
+      if not skema.methods[instanceMethodName]?
+        skema.methods[instanceMethodName] = instanceMethodDefinition
 
 
     ###
