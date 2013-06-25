@@ -47,4 +47,12 @@ exports.adapt = (schema, options, plugin) ->
         nodeManager: options.nodeManager
       return o
 
+    ##User defined firtuals
+    if configuration.virtuals?
+      for m, fn of configuration.virtuals.get
+        skema.virtual("#{m}").get fn
+
+      for m, fn of configuration.virtuals.set
+        skema.virtual("#{m}").set fn
+
   schema.plugin _plugin, options
