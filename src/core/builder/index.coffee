@@ -52,6 +52,11 @@ exports.plugin = () ->
       @_modelInitializer.createModels @_mongoConn.get(), (err) =>
         callback err
 
+    ###
+      Method: postBuild
+
+       Stub for director. No postBuild steps.
+    ###
     postBuild: (callback) ->
       callback null
 
