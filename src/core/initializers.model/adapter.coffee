@@ -60,12 +60,13 @@ exports.adapt = (schema, options, plugin) ->
 
     #Add a jsonify function
     skema.methods.jsonify = () ->
+      console.log 
       driverConf = @_configuration_.driver
       #substitute map fields
       o = {}
       for dbField of driverConf.schema.fields
-        if driverConf.schema.clientMapping?
-          if (newName = driverConf.schema.clientMapping["#{dbField}"])?
+        if driverConf.schema.clientMappings?
+          if (newName = driverConf.schema.clientMappings["#{dbField}"])?
             o["#{newName}"] = @["#{dbField}"]
           else
             o["#{dbField}"] = @["#{dbField}"]
