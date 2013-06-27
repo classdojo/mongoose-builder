@@ -25,8 +25,8 @@ exports.adapt = (schema, options, plugin) ->
       TODO(chris): Figure out a way to set these virtuals
       in a more intuitive place.  Perhaps take in a virtual
 
-      Every model gets a _type_ and _models_ virtual.
-      These methods use _ to prevent naming collisions.
+      Every model gets a _type_, _models_, and _configuration_ virtual.
+      These methods use _ to prevent naming collisions with mongoose.
 
       _type_ is the collection name in mongo
 
@@ -46,5 +46,54 @@ exports.adapt = (schema, options, plugin) ->
         drivers: options.models
         nodeManager: options.nodeManager
       return o
+
+    skema.virtual('_configuration_').get () ->
+      configuration
+
+    ##User defined virtuals
+    if configuration.virtuals?
+      for m, fn of configuration.virtuals.get
+        skema.virtual("#{m}").get fn
+
+      for m, fn of configuration.virtuals.set
+        skema.virtual("#{m}").set fn
+
+    #Add a jsonify function
+    skema.methods.jsonify = () ->
+      console.log 
+      driverConf = @_configuration_.driver
+      #substitute map fields
+      o = {}
+      for dbField of driverConf.schema.fields
+        if driverConf.schema.clientMappings?
+          if (newName = driverConf.schema.clientMappings["#{dbField}"])?
+            o["#{newName}"] = @["#{dbField}"]
+          else
+            o["#{dbField}"] = @["#{dbField}"]
+        else
+          o["#{dbField}"] = @["#{dbField}"]
+
+      #add virtual fields. These functions should all be synchronous
+      if driverConf.schema.virtualFields?
+        for virtualName, virtualFn of driverConf.schema.virtualFields
+          o["#{virtualName}"] = virtualFn()
+
+      #add any attached fields. These fields are given preference.
+      if @_configuration_.attach?
+        for attachedField of @_configuration_.attach
+          if @_doc["#{attachedField}"]?
+            o["#{attachedField}"] = @_doc["#{attachedField}"]
+      return o
+
+    skema.methods.attach = (name, clbk) ->
+      if not @_configuration_.attach? or not @_configuration_.attach["#{name}"]?
+        clbk(new Error("No attachment with name #{name}"), null)
+      else
+        @_configuration_.attach["#{name}"] @, (err, val) =>
+          if err?
+            clbk err, null
+          else
+            @._doc["#{name}"] = val
+            clbk null, @
 
   schema.plugin _plugin, options
