@@ -2,6 +2,7 @@
   A small mongoose adapter that transforms schemas from class-like coffeescript classes
   into the more idosyncratic mongoose plugin interface
 ###
+_ = require("underscore")
 
 
 exports.adapt = (schema, options, plugin) ->
@@ -49,6 +50,8 @@ exports.adapt = (schema, options, plugin) ->
 
     skema.virtual('_configuration_').get () ->
       configuration
+    skema.statics._configuration_ = () ->
+      configuration
 
     ##User defined virtuals
     if configuration.virtuals?
@@ -83,6 +86,9 @@ exports.adapt = (schema, options, plugin) ->
         for attachedField of @_configuration_.attach
           if @_doc["#{attachedField}"]?
             o["#{attachedField}"] = @_doc["#{attachedField}"]
+
+      #always include the _id field
+      o._id = @_id
       return o
 
     skema.methods.attach = (name, clbk) ->
@@ -95,5 +101,24 @@ exports.adapt = (schema, options, plugin) ->
           else
             @._doc["#{name}"] = val
             clbk null, @
+
+    ###
+    unmaps a json field using schema.clientMappings, if they exist.
+    function is synchronous.  Since this method is static, we must
+    invoke _configuration_ to get it's value.
+    ###
+    skema.statics.unmap = (obj) ->
+      mappings = @_configuration_().driver.schema.clientMappings
+      if not mappings?
+        return obj
+      inverted = @_configuration_().__invertedFieldMap =
+          @_configuration_().__invertedFieldMap || _.invert(mappings)
+      o = {}
+      for k,v of obj
+        if inverted[k]?
+          o[inverted[k]] = v
+        else
+          o[k] = v
+      return o
 
   schema.plugin _plugin, options
