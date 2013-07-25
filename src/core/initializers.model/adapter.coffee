@@ -21,7 +21,6 @@ exports.adapt = (schema, options, plugin) ->
       if not skema.methods[instanceMethodName]?
         skema.methods[instanceMethodName] = instanceMethodDefinition
 
-
     ###
       TODO(chris): Figure out a way to set these virtuals
       in a more intuitive place.  Perhaps take in a virtual
