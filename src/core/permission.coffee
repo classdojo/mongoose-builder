@@ -24,9 +24,10 @@ exports.plugin = () ->
                   Permission.SUPER
 
     ###
-    constructor: (ownerResource, pLevel) ->
-      @_owner = ownerResource
-      @_pLevel = pLevel
+    constructor: (ownerResource, pLevel, featureFlags) ->
+      @__owner = ownerResource
+      @__pLevel = pLevel
+      @__featureFlags = featureFlags
 
     ###
       Method: serialize
@@ -39,8 +40,9 @@ exports.plugin = () ->
     ###
     serialize: () ->
       p =
-        _id: @_owner.id
-        l: @_pLevel
+        _id: @__owner.id
+        l: @__pLevel
+        f: @__featureFlags
       return p
 
     ###
@@ -48,18 +50,18 @@ exports.plugin = () ->
     ###
 
     gt: (pObj) ->
-      @_pLevel > pObj.l
+      @__pLevel > pObj.l
 
     gte: (pObj) ->
-      @_pLevel >= pObj.l
+      @__pLevel >= pObj.l
 
     lt: (pObj) ->
-      @_pLevel < pObj.l
+      @__pLevel < pObj.l
 
     lte: (pObj) ->
-      @_pLevel <= pObj.l
+      @__pLevel <= pObj.l
 
     @::__defineGetter__ 'level', () ->
-      @_pLevel
+      @__pLevel
 
   Permission
