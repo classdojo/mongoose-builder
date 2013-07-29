@@ -78,7 +78,7 @@ exports.adapt = (schema, options, plugin) ->
       #add virtual fields. These functions should all be synchronous
       if driverConf.schema.virtualFields?
         for virtualName, virtualFn of driverConf.schema.virtualFields
-          o["#{virtualName}"] = virtualFn()
+          o["#{virtualName}"] = virtualFn.call(@)
 
       #add any attached fields. These fields are given preference.
       if @_configuration_.attach?
