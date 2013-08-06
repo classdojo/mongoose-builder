@@ -1,7 +1,7 @@
 {
     "name": "mongoose-builder",
     "description": "Builds and enriches models with mongoose",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "private": true,
     "homepage": "",
     "repository": {
@@ -18,7 +18,7 @@
         "lib": "."
     },
     "dependencies": { 
-        "mongoose": "3.6.8",
+        "mongoose": "3.6.15",
         "coffee-script": "1.4.0",
         "plugin": "0.3.x",
         "underscore": "1.4.2"

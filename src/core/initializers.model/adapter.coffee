@@ -15,7 +15,7 @@ exports.adapt = (schema, options, plugin) ->
       if pluginMethodName is 'constructor'
         continue
       #ADD ALL THE METHODS. Give priority to schema instance method definitions.
-      skema.methods[pluginMethodName] = configuration.methods.instance[pluginMethodName] || pluginMethodDefinition
+      skema.method(pluginMethodName, configuration.methods.instance[pluginMethodName] || pluginMethodDefinition)
     #add any other instance methods that don't override default plugin methods
     for instanceMethodName, instanceMethodDefinition of configuration.methods.instance
       if not skema.methods[instanceMethodName]?
@@ -90,11 +90,11 @@ exports.adapt = (schema, options, plugin) ->
       o._id = @_id
       return o
 
-    skema.methods.attach = (name, clbk) ->
+    skema.methods.attach = (name, actor, clbk) ->
       if not @_configuration_.attach? or not @_configuration_.attach["#{name}"]?
         clbk(new Error("No attachment with name #{name}"), null)
       else
-        @_configuration_.attach["#{name}"] @, (err, val) =>
+        @_configuration_.attach["#{name}"] @, actor, (err, val) =>
           if err?
             clbk err, null
           else
