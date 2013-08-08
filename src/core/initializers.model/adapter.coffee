@@ -68,38 +68,46 @@ exports.adapt = (schema, options, plugin) ->
       o = {}
       for dbField of driverConf.schema.fields
         if driverConf.schema.clientMappings?
-          if (newName = driverConf.schema.clientMappings["#{dbField}"])?
-            o["#{newName}"] = @["#{dbField}"]
+          if (newName = driverConf.schema.clientMappings[dbField])?
+            o[newName] = @[dbField]
           else
-            o["#{dbField}"] = @["#{dbField}"]
+            o[dbField] = @[dbField]
         else
-          o["#{dbField}"] = @["#{dbField}"]
+          o[dbField] = @[dbField]
 
       #add virtual fields. These functions should all be synchronous
       if driverConf.schema.virtualFields?
         for virtualName, virtualFn of driverConf.schema.virtualFields
-          o["#{virtualName}"] = virtualFn.call(@)
+          o[virtualName] = virtualFn.call(@)
 
       #add any attached fields. These fields are given preference.
       if @_configuration_.attach?
         for attachedField of @_configuration_.attach
-          if @_doc["#{attachedField}"]?
-            o["#{attachedField}"] = @_doc["#{attachedField}"]
+          if @_doc[attachedField]?
+            finalAttachedName = attachedField.split(':').pop()
+            o[finalAttachedName] = @_doc[attachedField]
 
       #always include the _id field
       o._id = @_id
       return o
 
     skema.methods.attach = (name, actor, clbk) ->
-      if not @_configuration_.attach? or not @_configuration_.attach["#{name}"]?
-        clbk(new Error("No attachment with name #{name}"), null)
-      else
-        @_configuration_.attach["#{name}"] @, actor, (err, val) =>
-          if err?
-            clbk err, null
-          else
-            @._doc["#{name}"] = val
-            clbk null, @
+      attachments = name.split(',')
+      done = _.after attachments.length, () =>
+        clbk null, @
+      for attachment in attachments by 1
+        if not @_configuration_.attach? or not @_configuration_.attach[attachment]?
+          done()
+        else
+          @_configuration_.attach[attachment] @, actor, (err, val) =>
+            if not err?
+              @_doc[attachment] = val
+            done()
+            # if err?
+            #   clbk err, null
+            # else
+            #   @._doc["#{name}"] = val
+            #   clbk null, @
 
     ###
     unmaps a json field using schema.clientMappings, if they exist.
