@@ -5,10 +5,11 @@ exports.plugin = () ->
     ###
       Permission Levels
     ###
-    @R      = 0
-    @RW     = 1
-    @RWD    = 2
-    @SUPER  = 3
+    @PENDING = -2
+    @R       = 0
+    @RW      = 1
+    @RWD     = 2
+    @SUPER   = 3
 
     ###
       Method: constructor

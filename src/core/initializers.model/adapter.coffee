@@ -95,19 +95,15 @@ exports.adapt = (schema, options, plugin) ->
       attachments = name.split(',')
       done = _.after attachments.length, () =>
         clbk null, @
-      for attachment in attachments by 1
+      _.each attachments, (attachment) =>
         if not @_configuration_.attach? or not @_configuration_.attach[attachment]?
           done()
         else
           @_configuration_.attach[attachment] @, actor, (err, val) =>
+            # console.log "ATT", attachment, "Err", err
             if not err?
               @_doc[attachment] = val
             done()
-            # if err?
-            #   clbk err, null
-            # else
-            #   @._doc["#{name}"] = val
-            #   clbk null, @
 
     ###
     unmaps a json field using schema.clientMappings, if they exist.

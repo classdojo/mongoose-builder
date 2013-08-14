@@ -1,7 +1,7 @@
 {
     "name": "mongoose-builder",
     "description": "Builds and enriches models with mongoose",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "private": true,
     "homepage": "",
     "repository": {
